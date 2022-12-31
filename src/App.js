@@ -1,5 +1,5 @@
 import "./styles.css";
-import { useState, forwardRef, useEffect, useRef } from "react";
+import { useState, forwardRef, useRef } from "react";
 import { socialNetwork } from "./socialNetwork";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -20,13 +20,8 @@ export default function App() {
   const [connection2, setConnection2] = useState("");
   const [persons, setPersons] = useState([]);
   const [mutualConnections, setMutualConnections] = useState([]);
-  const [
-    message,
-    severity,
-    showMessage,
-    setShowMessage,
-    handleToastMsg
-  ] = useToastMessage();
+  const [message, severity, showMessage, setShowMessage, handleToastMsg] =
+    useToastMessage();
   const isMounted = useRef(false);
 
   const isEmpty = (value) => value === "" || value === null;
@@ -60,15 +55,6 @@ export default function App() {
     setMutualConnections(graph.getShortestPath(connection1, connection2));
   };
 
-  useEffect(() => {
-    if (!isMounted.currrent) {
-      isMounted.current = true;
-      return;
-    }
-    if (mutualConnections.length === 0) {
-      handleToastMsg("No connection found", "error");
-    }
-  }, [mutualConnections]);
 
   return (
     <div className="App">
@@ -130,7 +116,7 @@ export default function App() {
         >
           Get Mutual Connections
         </Button>
-        {mutualConnections.length > 0 && (
+        {mutualConnections.length > 0 ? 
           <Grid sx={{ marginTop: "1rem" }}>
             {mutualConnections.map((el, index) => (
               <span style={{ fontSize: "32px", fontStyle: "italic" }}>
@@ -139,7 +125,13 @@ export default function App() {
               </span>
             ))}
           </Grid>
-        )}
+          :
+          <Grid sx={{ marginTop: "1rem" }}>
+              <span style={{ fontSize: "32px", fontStyle: "italic" }}>
+                No connections
+              </span>
+          </Grid>
+        }
       </Grid>
 
       <Snackbar
